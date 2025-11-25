@@ -22,6 +22,8 @@ class MarketPriceData(BaseModel):
     commodity: str = Field(..., alias="commodity")
     apmc: str = Field(..., alias="apmc")
 
+    unit: str = Field(..., alias="Commodity_Uom", example="Qui")
+
     class Config:
         # This allows Pydantic to create the model from a dictionary
         from_attributes = True
