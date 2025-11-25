@@ -1,0 +1,13 @@
+# Python virtual environment
+venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+final_output.csv
+*.final_output.csv
+
+.env 
+.DS_Store
+*.env

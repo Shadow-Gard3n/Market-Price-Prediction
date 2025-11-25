@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agricultural Market Dashboard</title>
+    <link rel="stylesheet" href="css/market.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Agricultural Market Dashboard</h1>
+        </header>
+
+        <section class="card">
+            <h2>Market Price Forecast</h2>
+            <form id="forecast-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="commodity-select">Select Commodity</label>
+                        <select id="commodity-select">
+                            <option value="WHEAT">WHEAT</option>
+                            <option value="TOMATO">TOMATO</option>
+                            <option value="BRINJAL">BRINJAL</option>
+                            <option value="MUSTARD">MUSTARD</option>
+                            <option value="CAULIFLOWER">CAULIFLOWER</option>
+                            <option value="CUCUMBER">CUCUMBER</option>
+                            <option value="PUMPKIN">PUMPKIN</option>
+                            <option value="CABBAGE">CABBAGE</option>
+                            <option value="BOTTLE GOURD">BOTTLE GOURD</option>
+                            <option value="ONION">ONION</option>
+                            <option value="BAJRA">BAJRA</option>
+                            <option value="GREEN CHILLI">GREEN CHILLI</option>
+                            <option value="LADY FINGER">LADY FINGER</option>
+                            <option value="GUAR SEEDS">GUAR SEEDS</option>
+                            <option value="BITTER GOURD">BITTER GOURD</option>
+                            <option value="COTTON">COTTON</option>
+                            <option value="RADDISH">RADDISH</option>
+                            <option value="CARROT">CARROT</option>
+                            <option value="BANANA">BANANA</option>
+                            <option value="MOONG WHOLE (GREEN GRAM)">MOONG WHOLE (GREEN GRAM)</option>
+                            <option value="LEMON">LEMON</option>
+                            <option value="CAPSICUM">CAPSICUM</option>
+                            <option value="PADDY">PADDY</option>
+                            <option value="GROUND NUT">GROUND NUT</option>
+                        </select>
+                    </div>
+                    <button type="submit">Get 6-Month Forecast</button>
+                </div>
+            </form>
+
+            <div id="forecast-loader" class="loader hidden"></div>
+            <p id="forecast-error" class="error-message hidden"></p>
+            <div id="forecast-result" class="result-container hidden">
+                <h3>Forecast Chart</h3>
+                <img id="forecast-plot" src="" alt="Commodity Price Forecast Plot">
+                
+                <h3>Forecast Data (End of Month Price)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Forecasted Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="forecast-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Live Market Price Tracker</h2>
+            <form id="tracker-form">
+                 <div class="form-grid">
+                    <div class="form-group">
+                        <label for="commodity-input">Commodity Name</label>
+                        <select id="commodity-input" required>
+                            <option value="">Select Commodity</option>
+                            <option value="WHEAT">WHEAT</option>
+                            <option value="TOMATO">TOMATO</option>
+                            <option value="BRINJAL">BRINJAL</option>
+                            <option value="POTATO">POTATO</option>
+                            <option value="MUSTARD">MUSTARD</option>
+                            <option value="CAULIFLOWER">CAULIFLOWER</option>
+                            <option value="CUCUMBER">CUCUMBER</option>
+                            <option value="PUMPKIN">PUMPKIN</option>
+                            <option value="CABBAGE">CABBAGE</option>
+                            <option value="BOTTLE GOURD">BOTTLE GOURD</option>
+                            <option value="MAIZE">MAIZE</option>
+                            <option value="ONION">ONION</option>
+                            <option value="CHANA (BENGAL GRAM)">CHANA (BENGAL GRAM)</option>
+                            <option value="BAJRA">BAJRA</option>
+                            <option value="GREEN CHILLI">GREEN CHILLI</option>
+                            <option value="LADY FINGER">LADY FINGER</option>
+                            <option value="SOYABEANS">SOYABEANS</option>
+                            <option value="GUAR SEEDS">GUAR SEEDS</option>
+                            <option value="BITTER GOURD">BITTER GOURD</option>
+                            <option value="COTTON">COTTON</option>
+                            <option value="RADDISH">RADDISH</option>
+                            <option value="CARROT">CARROT</option>
+                            <option value="PEAS GREEN">PEAS GREEN</option>
+                            <option value="BANANA">BANANA</option>
+                            <option value="MOONG WHOLE (GREEN GRAM)">MOONG WHOLE (GREEN GRAM)</option>
+                            <option value="LEMON">LEMON</option>
+                            <option value="CAPSICUM">CAPSICUM</option>
+                            <option value="URAD (BLACK GRAM)">URAD (BLACK GRAM)</option>
+                            <option value="PADDY">PADDY</option>
+                            <option value="GROUND NUT">GROUND NUT</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="state-input">State Name</label>
+                        <select id="state-input" required>
+                            <option value="">Select State</option>
+                            <option value="RAJASTHAN">RAJASTHAN</option>
+                            <option value="CHHATTISGARH">CHHATTISGARH</option>
+                            <option value="MAHARASHTRA">MAHARASHTRA</option>
+                            <option value="UTTAR PRADESH">UTTAR PRADESH</option>
+                            <option value="MADHYA PRADESH">MADHYA PRADESH</option>
+                            <option value="PUNJAB">PUNJAB</option>
+                            <option value="HARYANA">HARYANA</option>
+                            <option value="GUJARAT">GUJARAT</option>
+                            <option value="ANDHRA PRADESH">ANDHRA PRADESH</option>
+                            <option value="UTTARAKHAND">UTTARAKHAND</option>
+                            <option value="ODISHA">ODISHA</option>
+                            <option value="TELANGANA">TELANGANA</option>
+                            <option value="HIMACHAL PRADESH">HIMACHAL PRADESH</option>
+                            <option value="WEST BENGAL">WEST BENGAL</option>
+                            <option value="KARNATAKA">KARNATAKA</option>
+                            <option value="KERALA">KERALA</option>
+                            <option value="JAMMU AND KASHMIR">JAMMU AND KASHMIR</option>
+                            <option value="TAMIL NADU">TAMIL NADU</option>
+                            <option value="CHANDIGARH">CHANDIGARH</option>
+                            <option value="JHARKHAND">JHARKHAND</option>
+                            <option value="PUDUCHERRY">PUDUCHERRY</option>
+                            <option value="NAGALAND">NAGALAND</option>
+                            <option value="GOA">GOA</option>
+                            <option value="BIHAR">BIHAR</option>
+                            <option value="TRIPURA">TRIPURA</option>
+                            <option value="ASSAM">ASSAM</option>
+                            <option value="ANDAMAN AND NICOBAR ISLANDS">ANDAMAN AND NICOBAR ISLANDS</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="apmc-input">APMC Name</label>
+                        <select id="apmc-input" required>
+                            <option value="" disabled selected>Select a state first</option>
+                        </select>
+                    </div>
+                    <button type="submit">Track Prices</button>
+                </div>
+            </form>
+
+            <div id="tracker-loader" class="loader hidden"></div>
+            <p id="tracker-error" class="error-message hidden"></p>
+            <div id="tracker-result" class="result-container hidden">
+                 <h3>Last 7 Days Market Data</h3>
+                 <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Commodity</th>
+                                <th>APMC</th>
+                                <th>Min Price</th>
+                                <th>Max Price</th>
+                                <th>Modal Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tracker-table-body"></tbody>
+                    </table>
+                 </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const forecastForm = document.getElementById('forecast-form');
+            const commoditySelect = document.getElementById('commodity-select');
+            const forecastLoader = document.getElementById('forecast-loader');
+            const forecastError = document.getElementById('forecast-error');
+            const forecastResult = document.getElementById('forecast-result');
+            const forecastPlot = document.getElementById('forecast-plot');
+            const forecastTableBody = document.getElementById('forecast-table-body');
+
+            const trackerForm = document.getElementById('tracker-form');
+            const commodityInput = document.getElementById('commodity-input');
+            const stateInput = document.getElementById('state-input');
+            const apmcInput = document.getElementById('apmc-input');
+            const trackerLoader = document.getElementById('tracker-loader');
+            const trackerError = document.getElementById('tracker-error');
+            const trackerResult = document.getElementById('tracker-result');
+            const trackerTableBody = document.getElementById('tracker-table-body');
+            
+            // --- NEW: Data for dynamic APMC dropdown ---
+            const apmcData = {
+                'UTTAR PRADESH': ['-- Select APMCs --','HARDOI', 'JAUNPUR APMC', 'FATEHPUR APMC', 'CHARRA', 'NAUGARH APMC', 'HASANPUR APMC', 'NAWABGANJ APMC', 'MAINPURI', 'ETAH', 'PRAYAGRAJ', 'WAZIRGANJ APMC', 'MAURANIPUR', 'MATHURA', 'MUZZAFFARNAGAR', 'BALLIA', 'AURAIYA', 'BASTI', 'POWAYAN', 'JALAUN', 'BILSI', 'SHAHJAHANPUR', 'HATHRAS', 'MADHOGANJ', 'RAE BARELI', 'SHIKOHABAD', 'BHARUASUMERPUR', 'FIROZABAD APMC', 'MORADABAD', 'LAKHIMPUR', 'PURANPUR', 'KHALILABAD', 'SULTANPUR', 'SANDILA APMC', 'AKBARPUR', 'SAHIYAPUR', 'BAREILLY', 'ACHNERA', 'AYODHYA', 'MOHAMADABAD APMC', 'BAHRAICH', 'SAMBHAL APMC', 'SITAPUR', 'ACHHALDA APMC', 'MUSKERA', 'FATEHPUR SIKRI', 'KOSIKALAN', 'UJHANI', 'UNNAO APMC', 'BANDA', 'HAPUR', 'CHANDAUSI', 'ANAND NAGAR APMC', 'BARABANKI', 'RASRA APMC', 'MAHOBA', 'AMROHA APMC', 'JHANSI', 'KHAIR', 'PILIBHIT', 'SADABAD APMC', 'SHAGANJ', 'URAI', 'GOLAGOKARNATH', 'PALIA KALAN', 'ROBERTSGANJ', 'TULSIPUR APMC', 'VARANASI', 'KASGANJ', 'ATARRA APMC', 'BALRAMPUR APMC', 'NAJIBABAD APMC', 'JALALABAD APMC', 'RATH', 'GHIROR', 'TUNDLA', 'MEERUT', 'AGRA', 'BULANDSHAHAR', 'CHANDAULI', 'GHAZIABAD', 'SAHJANWA APMC', 'KARWI APMC', 'PRATAPGARH', 'NAUTANWA APMC', 'SIRSAGANJ', 'NOIDA APMC', 'MAHMUDABAD', 'JAHANGIRABAD', 'DADRI UP', 'KAIMGANJ', 'KANPUR', 'JAIS', 'KHURJA', 'SHAMLI', 'BADAUN', 'BHARTHANA', 'ETAWAH', 'GORAKHPUR', 'ALIGARH', 'SHAHBAD HARDOI', 'KANNAUJ', 'CHIBRAMAU', 'AZAMGARH', 'KOPAGANJ', 'LUCKNOW', 'MILAK', 'BANGARMAU', 'SAHARANPUR', 'RAMPUR BILASPUR', 'NAANPARA', 'TIKUNIYA', 'KONCH', 'DEORIA', 'BISALPUR', 'FARRUKHABAD', 'LALITPUR', 'AJUHA', 'MIRZAPUR', 'RAMPUR', 'BINDIKI', 'JANGIPURA', 'SAFDARGANJ', 'PARTAWAL', 'GONDA', 'CHAUBEPUR', 'GURSARAI', 'JASRA', 'BABERU', 'CHIRGAON', 'RURA', 'JASWANTNAGAR', 'BAHERI', 'MANJHANPUR', 'MOTH', 'AONLA', 'TILHAR', 'MAHRONI', 'CHARKHARI', 'DATAGANJ', 'BHINGA', 'JHINJHAK', 'SALON', 'LALGANJ', 'JAFARGANJ', 'PAYAGPUR', 'RUDAULI', 'BISWAN', 'GARAURA', 'ANUPSHAHAR', 'SHIKARPUR', 'GANGOH', 'DIBAI', 'KUSHI NAGAR', 'GOPIGANJ', 'AHIRAURA', 'PURWA', 'KIRATPUR', 'MUNGRA BADSHAHPUR', 'BAHJOI', 'YUSUFPUR', 'CHANDPUR', 'UTTARIPURA'],
+                'RAJASTHAN': ['-- Select APMCs --','SAWAI MADHOPUR', 'SIKAR', 'RAJSAMAND', 'RAJDHANI MANDI KUKARKHERA', 'PRATAPGARH RJ', 'ATRU', 'BARODAMEV', 'BIKANER GRAIN', 'NAGOUR', 'MALPURA', 'KISHANGARH RENWAL', 'JALORE', 'DAUSA', 'CHITTORGARH', 'CHIRAWA', 'PHALODI', 'SANGARIYA', 'PALI', 'SRIGANGANAGAR F AND V', 'ITAWA', 'BARAN', 'BARISADRI', 'BILARA', 'SRI GANGANAGAR GRAIN', 'RAMGANJ MANDI', 'BASSI', 'BIKANER F AND V', 'BHAGAT KI KOTHI', 'GANGAPUR CITY', 'JAIPUR GRAIN', 'NIMBAHERA', 'KOTA', 'BHINMAL', 'ANOOPGARH', 'JODHPUR F AND V', 'AJMER F AND V', 'DEGANA', 'BHARATPUR', 'LOONKARANSAR', 'SUMERPUR', 'DEOLI', 'M. KISHANGARH', 'IKLERA', 'SRI MADHOPUR', 'UDAIPUR F AND V', 'BHILWARA', 'KOTPUTLI', 'TONK', 'PADAMPUR', 'FATEHNAGAR', 'KEKRI', 'JODHPUR GRAIN', 'GAJSINGHPUR', 'DOONI', 'LALSOT', 'CHOMU F AND V', 'BANDIKUI', 'ALWAR', 'BIJAY NAGAR', 'MANDAWARI', 'CHOTTISADRI', 'BHAWANI MANDI', 'MAHUWA MANDAWAR', 'BALOTRA', 'BEAWAR', 'CHAKSU', 'SHAHPURA', 'PILIBANGA', 'FATEHPUR', 'KUCHAMANCITY', 'NIWAI', 'GOLUWALA', 'HANUMANGARH', 'SRIKARANPUR', 'SRI DUNGARGARH', 'KHAIRTHAL', 'SADULPUR', 'SADULSHAHAR', 'JHALRAPATAN', 'NADBAI', 'UDAIPUR GRAIN', 'GANGAPUR-RJ', 'RAWLA', 'KHERLI', 'BANSWARA', 'JAITSAR', 'SOJAT ROAD', 'UNIYARA', 'CHOMEHLA', 'GHARSANA', 'BIJOLIYA', 'SARDAR SHAHAR', 'SURATGARH', 'RANI', 'PALSANA', 'DEEG', 'SRI VIJAYNAGAR', 'SUJANGARH', 'RANIWARA', 'BUNDI', 'NAGAR', 'GUDA GODJI', 'PIPARCITY', 'SURAJGARH', 'SUMERGANJ', 'KESRISINGHPUR', 'KAPASAN', 'JAISALMER', 'CHABRA', 'DEI', 'DUNGARPUR', 'HINDOUN', 'ANTA', 'BARMER', 'CHOMU GRAIN', 'KAMAN', 'MAHUWA RJ', 'BAYANA', 'MERTA CITY', 'KOTA F AND V', 'RATANGARH', 'RAWATSAR', 'SANCHORE', 'NOHAR', 'NOKHA', 'JAITARAN', 'CHURU', 'BHADRA', 'NAWALGARH', 'AABU ROAD', 'AJMER GRAIN', 'KHANPUR', 'JAIPUR F AND V MUHANA', 'DHOLPUR', 'KHAJUWALA', 'BEGU', 'RAISINGHNAGAR', 'JHUNJHUNU', 'BAJJU', 'KESHORAIPATAN', 'RIDMALSAR', 'NEEM KA THANA', 'DEEDWANA', 'MANDALGARH', 'HANUMANGARH TOWN', 'KHANDAR', 'PAHARI', 'KISHANGARH BAS', 'NAHARGARH', 'DAG', 'OSIAN MATHANIA', 'JAYAL', 'SAMRANIA', 'BEHROR', 'BANSUR', 'DHORIMANNA', 'CHOHTAN', 'PUGAL ROAD', 'MOHANGARH', 'ARNOD', 'KUMHER', 'TIJARA', 'SOJAT CITY', 'GOVINDGARH', 'MANOHAR THANA', 'DUDU', 'DABLIRATHAN', 'BHUSAWAR VEIR', 'KHATOLI', 'BAGRU', 'SIKRI', 'TIBBI'],
+                'MAHARASHTRA': ['-- Select APMCs --','VANI', 'NAGPUR', 'SANGAMNER', 'AHMEDNAGAR', 'GANGAPUR-MH', 'MORSHI', 'AUSA', 'Malkapur', 'AKOT', 'SATANA', 'DONDAICHA', 'NANDED', 'NANDGAON', 'BHOKAR', 'KATOL', 'DHAMANGAON RAILWAY', 'KALAMB', 'CHANDVAD', 'SANGOLA', 'NAGBHID', 'KARMALA', 'JALNA', 'LONAND', 'HINGANGHAT', 'BARAMATI', 'BHIWAPUR', 'RAHATA', 'AKOLA', 'KARANJA', 'BARSHI', 'AMARAVATHI', 'MUL', 'SOLAPUR', 'VARORA', 'DEVALA', 'NER PARASOPANT', 'TIRODA', 'SHIRUR', 'KOLHAPUR', 'UDGIR', 'MURUM', 'YEOLA', 'PUNE', 'CHIKHALI', 'KARAD', 'LASALGAON', 'CHAMORSHI', 'PANDHARPUR', 'SHIRPUR', 'RISOD', 'JINTUR', 'WASHIM', 'RAHURI', 'MALEGOAN', 'Sindevahi', 'DOUND', 'MANORA', 'DINDORI', 'PHALTAN', 'SHRIRAMPUR', 'PARTUR', 'MANGALWEDHA', 'YAVATMAL', 'AAMGAON', 'KHED', 'DARYAPUR', 'ARVI', 'JUNNAR', 'MANGRULPEER', 'JALGAON', 'SAVNER', 'SINDI', 'MAJALGAON', 'PARBHANI', 'SINNER', 'NAMPUR', 'MURTIZAPUR', 'LASUR STATION', 'AATPADI', 'CHANDUR BAZAR', 'INDAPUR', 'AMALNER', 'DIGRAS', 'AMBEJOGAI', 'UMRANE', 'CHALISGAON', 'KANNAD', 'Parli Vaijyanath', 'VAIJAPUR', 'GEVRAI', 'NEWASA', 'HINGOLI', 'SHAHADA', 'NANDURBAR', 'TUMSAR', 'VAI', 'WARDHA', 'DHULE', 'ACHALPUR', 'SHEGAON', 'SELU', 'ANJANGAON SURJI', 'GONDIYA', 'SENGOAN', 'CHANDRAPUR', 'Basmat', 'BEED', 'KHAMGAON', 'AURANGABAD', 'CHOPADA', 'LATUR', 'AHERI', 'PIMPALGAON BASWANT', 'SANGLI', 'LONAR', 'MUMBAI', 'NASIK', 'ARNI', 'AKLUJ', 'TULJAPUR', 'UMARGA', 'BABHULGAON', 'ARMORI DESAIGANJ', 'MEHEKAR', 'DHARMABAD', 'UMRED', 'DUDHANI', 'TELHARA', 'NANDURA', 'PARNER', 'LAKHANDUR', 'MALEGAON WASHIM', 'ATPADI', 'AHILYANAGAR', 'KALAMB(Dharashiv)', 'Parli Vaijnath', 'AMRAVATHI', 'MALEGAON', 'SENGAON', 'CHANDWAD', 'GANGAPUR', 'SAONER', 'CHHATRAPATI SAMBHAJINAGAR', 'WAI', 'SINNAR', 'CHOPDA', 'AMRAVATI', 'PARLI VAIJNATH', 'MALKAPUR', 'KALAMB (DHARASHIV)', 'NASHIK'],
+                'MADHYA PRADESH': ['-- Select APMCs --','SHAJAPUR', 'KRISHI UPAJ MANDI SAMITI-BHIKANGAON', 'KRISHI UPAJ MANDI SAMITI-BADWAHA', 'DEWAS', 'NEEMUCH', 'KRISHI UPAJ MANDI SAMITI-SANAWAD', 'KRISHI UPAJ MANDI SAMITI-KARHI', 'MAHIDPUR', 'GADARWARA', 'HARDA', 'KAROND', 'KRISHI UPAJ MANDI SAMITI-ANJAD', 'KRISHI UPAJ MANDI SAMITI-GANDHWANI', 'AGAR', 'KRISHI UPAJ MANDI SAMITI-UDAIPURA', 'KRISHI UPAJ MANDI SAMITI-KUKSHI', 'BERASIA', 'KRISHI UPAJ MANDI SAMITI-NAGOD', 'KATNI', 'BARELI', 'SANWER', 'SEHORA', 'KRISHI UPAJ MANDI SAMITI-KOLARAS', 'KRISHI UPAJ MANDI SAMITI-KHURAI', 'KRISHI UPAJ MANDI SAMITI-PANDHURNA', 'KRISHI UPAJ MANDI SAMITI-SHIVPURI', 'JABALPUR', 'CHHINDWARA', 'KRISHI UPAJ MANDI SAMITI-KUMBHRAJ', 'KRISHI UPAJ MANDI SAMITI-DHAMNOD', 'BADNAWAR', 'KHIRKIYA', 'KRISHI UPAJ MANDI SAMITI-SAUNSAR', 'KRISHI UPAJ MANDI SAMITI-BANAPURA', 'KHATEGAON', 'KRISHI UPAJ MANDI SAMITI-RAISEN', 'DABRA', 'SEHORE', 'KHARGONE', 'KRISHI UPAJ MANDI SAMITI-KARELI', 'BADNAGAR', 'OBAIDULLAGANJ', 'KHANDWA', 'RATLAM', 'KRISHI UPAJ MANDI SAMITI-NASRULLAGANJ', 'PIPARIYA', 'TIMARNI', 'MANDSAUR', 'KRISHI UPAJ MANDI SAMITI-LASHKAR', 'GUNA', 'GANJ BASODA', 'DATIA', 'SHUJALPUR', 'SATNA', 'DHAR', 'VIDISHA', 'BURHANPUR', 'ITARSI', 'SHAHPURA BHITONI', 'TIKAMGARH', 'BIAORA', 'INDORE', 'BINA', 'CHHATARPUR', 'BETUL', 'ASHTA', 'BALAGHAT', 'SHEOPURKALAN', 'SAGAR', 'KRISHI UPAJ MANDI SAMITI-SINGRAULI', 'ASHOKNAGAR', 'DAMOH', 'UJJAIN', 'SENDHWA', 'JAORA', 'REWA', 'MHOW', 'MANDLA', 'SEONI', 'MORENA', 'BADA MALHERA', 'HARPALPUR', 'NIWARI', 'GARHAKOTA', 'KURAWAR', 'PANNA', 'PATHARIA', 'MUNGAOLI', 'KHETIYA', 'GAUTAMPURA', 'SIRALI', 'BAIKUNTHPUR', 'PETLAWAD', 'THANDLA', 'JOBAT', 'ARON', 'RAJNAGAR', 'BADARWAS', 'CHAKGHAT', 'JHABUA', 'LAVKUSHNAGAR', 'SIRONJ', 'NARSINGHGARH', 'SEGAON', 'RAHATGARH', 'BHIND', 'DALAUDA', 'ALIRAJPUR', 'RAJGARH', 'BEOHARI', 'SONKATCH', 'PIPALIYA', 'SILWANI', 'BARWANI', 'BANKHEDI', 'HANUMANA ', 'HARSUD', 'MAIHAR', 'KARERA', 'PACHORE', 'REHLI', 'KASRAWAD', 'SEMRI HARCHAND', 'SIDHI ', 'CHHAPARA', 'SHAHDOL', 'GOTEGAON', 'CHAURAI', 'AMARPATAN', 'JABERA', 'KATANGI', 'KRISHI UPAJ MANDI SAMITI PATAN', 'DEORI', 'ANUPPUR', 'UMARIA ', 'PALARI', 'NARSINGPUR', 'MANAWAR', 'SAILANA'],
+                'PUNJAB': ['-- Select APMCs --','TARN TARAN APMC', 'SANGRUR', 'BHUCHO MANDI APMC', 'MAUR', 'PATIALA', 'KHARAR APMC', 'BARNALA', 'ROPAR', 'NAWANSHAHR MARKET', 'HOSHIYARPUR', 'FAZILKA', 'BHATINDA', 'FARIDKOT APMC', 'GONIANA', 'FEROZEPUR CITY APMC', 'LUDHIANA APMC', 'GURDASPUR APMC', 'RAMAN APMC', 'MANSA', 'KHANNA APMC', 'MUKTSAR', 'AMRITSAR', 'GIDDERBAHA', 'RAMPURA PHUL', 'MALOUT APMC', 'MOGA APMC', 'JALANDHAR', 'BHIKHI APMC', 'ABOHAR', 'TAPPA', 'PATHANKOT', 'SARDULGARH APMC', 'FATHEGARH SAHIB', 'BUDHLADA APMC', 'KAPURTHALA APMC', 'KOTKAPURA APMC', 'AMLOH APMC', 'RAJPURA', 'JANDIALA GURU GEHRI', 'PATRAN', 'TALWANDI BHAI', 'SHAHKOT', 'NAKODAR', 'NABHA', 'BHIKHIWIND', 'MOONAK', 'KHEMKARAN', 'DERA BABA NANAK', 'SAMANA', 'BHOGPUR', 'DUDAN SADHAN', 'MEHTA', 'LEHRAGAGA', 'ATTARI', 'BARETA', 'AJNALA', 'SUNAM', 'DHURI', 'JAGRAON', 'RAYYA', 'NAUSHEHARA PANNUAN', 'MACHHIWARA SAHIB', 'SULTANPUR LODHI', 'SADIQ', 'BANGA', 'BATALA', 'MAKHU', 'GURUHARSAHAI', 'JALALBAD', 'KALANAUR', 'KHANAURI', 'PHAGWARA', 'FATEHGARH CHURIAN', 'PATTI', 'JAITO', 'FEROZEPUR CANTT', 'MALERKOTLA', 'BALACHAUR', 'DINANAGAR'],
+                'HARYANA': ['-- Select APMCs --','SHAHZADPUR APMC', 'NARAINGARH APMC', 'FEROZPUR JHIRKA APMC', 'PANCHKULA APMC', 'JAKHAL', 'GURGAON', 'JIND', 'PANIPAT', 'RAIPUR RANI APMC', 'KAITHAL', 'NARWANA', 'SIRSA', 'BARWALA HISAR', 'FARIDABAD', 'PIPLI APMC', 'LADWA', 'TOHANA', 'DHAND', 'SONEPAT', 'BHATTU KALAN APMC', 'CHHACHHRAULI', 'KARNAL', 'ELLANABAD', 'UKLANA APMC', 'ASANDH', 'JULANA', 'GOHANA', 'PUNDRI', 'DABWALI', 'REWARI', 'KALANWALI', 'PEHOWA', 'FATEHABAD', 'UCHANA', 'RANIA', 'PAI APMC', 'HANSI', 'ADAMPUR', 'CH DADRI', 'AMBALA CANTT. APMC', 'GANAUR', 'PUNHANA APMC', 'KOSLI APMC', 'THANESAR', 'NISSING', 'ISMAILABAD', 'AMBALA', 'PILLUKHERA', 'KALAYAT', 'SIWANI', 'NIGDHU APMC', 'TAURU APMC', 'YAMUNA NAGAR APMC', 'BARWALA PANCHKULA APMC', 'INDRI', 'ROHTAK', 'CHEEKA', 'ATELI APMC', 'JAGADHRI APMC', 'SAFIDON', 'BHIWANI', 'RATIA', 'HISAR APMC', 'MEHAM APMC', 'TARAORI', 'NARNAUL APMC', 'NARNAUND', 'SADHAURA APMC', 'SHAHBAD', 'SAMALKHA', 'JHAJJAR', 'NUH APMC', 'MULLANA', 'NILOKHERI APMC', 'MOHINDERGARH APMC', 'GHARAUNDA', 'PALWAL', 'KANINA APMC', 'MADLAUDA', 'HODAL', 'KHARKHODA', 'TIGAON', 'BEHAL', 'SAMPLA', 'JUI', 'BABAIN', 'SIWAN', 'FARRUKHNAGAR', 'BARARA', 'BASS', 'BERI', 'JUNDLA', 'MUSTAFABAD', 'DING', 'BAPOLI', 'RADAUR', 'ALEWA', 'SOHNA', 'LOHARU', 'TOSHAM', 'BHUNA', 'HASSANPUR', 'HATHIN', 'PATAUDI', 'BAHADURGARH', 'BALLABGARH ', 'MOHNA', 'ISRANA APMC'],
+                'GUJARAT': ['-- Select APMCs --','SANJELI APMC', 'PATDI APMC', 'JUNAGADH', 'HALVAD', 'PATAN', 'KODINAR', 'SONGADH APMC', 'IDAR APMC', 'SIDDHPUR', 'FATEHPURA APMC', 'THASRA APMC', 'SELAMBA APMC', 'KATHLAL APMC', 'WANKANER APMC', 'VALSAD', 'BHILODA', 'DEVGADHBARIA APMC', 'UNA APMC', 'UNAVA APMC', 'MAHUVA APMC GJ', 'CHOTILA APMC', 'CHIKHLI APMC', 'LIMKHEDA APMC', 'MATAR APMC', 'DHANDHUKA APMC', 'BHAVNAGAR', 'MANADAL APMC', 'VADALI APMC', 'GARIYADHAR APMC', 'DEDIYAPADA APMC', 'MANDVI APMC', 'KADI APMC', 'RAJPIPLA APMC', 'TILAKWADA APMC', 'JHAGADIYA APMC', 'DAHOD', 'PRANTIJ APMC', 'VALIA APMC', 'BARDOLI APMC', 'GANDHINAGAR APMC', 'TALAJA APMC', 'DABHOI APMC', 'UMRALA APMC', 'SIHOR APMC', 'BAVLA APMC', 'LUNAWADA APMC', 'VALABHIPUR APMC', 'PALITANA APMC', 'PADARA', 'BORSAD', 'KHAMBHAT', 'AHMEDABAD', 'HIMMATNAGAR', 'ANAND', 'DEHGAM', 'GODHRA', 'DHANERA', 'NAVSARI APMC', 'THARAD', 'VISNAGAR', 'DEESA', 'JASDAN', 'RADHANPUR APMC', 'GONDAL', 'JAMNAGAR', 'BHABHAR', 'NADIAD', 'RAJULA', 'MAHUVA', 'BOTAD', 'UPLETA', 'KAPADWANJ', 'KOSAMBA APMC', 'PANTHAWADA', 'THARA', 'VIJAPUR', 'TARAPUR', 'NIZAR', 'VADODARA', 'PAVI-JETPUR', 'MEHSANA', 'BHARUCH', 'SAVLI', 'MODASA', 'SANAND', 'TALOD', 'BILIMORA', 'JETPUR', 'DHORAJI', 'SAVARKUNDLA', 'KALAVAD', 'BODELI', 'MORBI', 'RAPAR', 'RAJKOT', 'VINCHHIYA', 'AMRELI', 'DHARI', 'VYARA', 'MAHEMDAVAD', 'JHALOD', 'BAGASARA', 'KALOL', 'BAYAD APMC', 'PORBANDAR', 'VISAVADAR', 'DHROL', 'BHUJ', 'ANJAR', 'JAMKHAMBHALIYA', 'PALANPUR', 'BABRA', 'KAPRADA', 'DHANGADRA', 'KUKARMUDA', 'AHWA', 'VERAVAL', 'VASDA', 'MANDVI', 'MALPUR', 'UNCHAL', 'PARDI', 'TALALAGIR', 'MAANSA', 'BHANVAD', 'LAKHANI', 'DESAR', 'VIRAMGAM', 'VALOD', 'CHANASMA ', 'VIRPUR', 'UNJHA', 'DEODAR', 'SURAT', 'JAM JODHPUR', 'BHESAN'],
+                'TAMIL NADU': ['-- Select APMCs --','VILLUPURAM', 'MOOLANUR', 'SANKARAPURAM', 'THIYAGADURGAM', 'TINDIVANAM', 'GUDIYATHAM', 'PARAMAKUDI', 'ULUNDURPETTAI', 'THENI', 'ANTHIYUR', 'KALLAKURICHI', 'CHEYYAR', 'PANRUTI', 'MAYILADUTHURAI', 'POLUR', 'VIKIRAVANDI', 'AMMOOR', 'USILAMPATTI', 'KALAVAI', 'VIRUDHACHALAM', 'DINDIGUL', 'CHETPET', 'PALANI', 'GINGEE', 'VELLORE', 'AVALURPET', 'UDUMALPET', 'THIRUKOVILUR', 'SATHYAMANGALAM', 'ODDANCHATRAM', 'VANDAVASI', 'VETTAVALAM', 'ANNUR', 'NATHAM', 'VANIYAMBADI', 'POLLACHI', 'THIRUPPUR', 'KAMUTHI', 'ARANI', 'CUMBUM', 'ANAIMALAI', 'PETHAPPAMPATTI', 'VELLAKOIL', 'NEGAMAM', 'PARAMATHI VELUR', 'RAJASINGAMANGALAM', 'DESUR', 'THIRUPATHUR', 'VIRUDHUNAGAR', 'MUDHUKALATHUR', 'SIRKALI', 'HARUR', 'SEMBANARKOIL', 'KANCHEEPURAM', 'ERODE', 'KUTHALAM', 'MADURAI', 'MADURANATHANGAM', 'KILPENNATHUR', 'GOBICHETTIPALAYAM', 'LALGUDI', 'RAJAPALAYAM', 'PERUNDURAI', 'KURUNJIPADY', 'KUMBAKONAM', 'PAPANASAM', 'SETHIATHOPE', 'SRIMUSHNAM', 'CUDDALORE OT', 'JEYANKONDAM', 'KATTUMANNARKOIL', 'ORATHANADU', 'THANJAVUR', 'PATTUKKOTTAI', 'SALEM', 'MELUR', 'T VADIPATTI', 'BUDALUR', 'SRIVAIKUNDAM', 'MADATHUKULAM', 'MANAMADURAI', 'THIRUVADANAI', 'ALANGUDI', 'ATTHUR', 'DEVAKOTTAI', 'EDAPPADI', 'PUNJAI PULIAMPADDI', 'SIVAGANGAI', 'THIRUPOONDI', 'VAZHAPPADI', 'BATLAGUNDU', 'ELUMATHUR', 'AVALPOONDURAI', 'KODUMUDI', 'POCHAMPALLI', 'BOOTHAPADI', 'PONGALUR', 'GOPAL PATTI', 'KULASEKHARAM', 'BODINAYAKANUR', 'SANKARANKOVIL', 'PAVOORCHATRAM', 'MANALURPET', 'KANGEYAM', 'MANNARKUDI', 'TENKASI', 'THUVARANKURICHY', 'RAMANATHAPURAM', 'ARCOT', 'AMBASAMUTHIRAM', 'ARANTHANGI', 'KADAYANALLUR', 'VALLIOOR', 'GANGAVALLI', 'MECHERI', 'KARIKUDI', 'KUDAVASAL', 'CHINNAMANUR', 'VALANGAIMAN', 'SIVAGIRI', 'TIRUVARUR', 'SINGAMPUNERI', 'CHINNASALEM', 'NAMAGIRIPETTAI', 'REDHILLS', 'TIRUNELVELI', 'KONGANAPURAM', 'MANAPPARAI', 'VELLANKOIL', 'THIRUVALLUR', 'PALACODE', 'THALAVADI', 'SENJERI MALAIYADIPALAYAM', 'PERUMBALUR', 'KINATHUKADAVU', 'HOSUR', 'TIRUCHIRAPALLI', 'UTHIRAMERUR', 'VADAMADURAI', 'VALATHI', 'THURAIYUR', 'SATTUR', 'OMALUR', 'ARUPPUKOTTAI', 'ILUPPUR', 'MARAKKANAM', 'TIRUTTANI', 'THIRUMANGALAM', 'SEVUR', 'THONDAMUTHUR', 'SULUR', 'DHARMAPURI', 'COIMBATORE', 'KARUMANDURAI', 'KRISHNAGIRI', 'BHAVANI', 'THAMMAMPATTI', 'DHARAPURAM', 'AVINASHI', 'ALANGIYAM', 'PALLADAM', 'MOOTHUR', 'KUNNATHUR', 'UTHANGARAI', 'POONTHOTTAM', 'VEPPUR', 'MYLAMAPADI', 'MONDAY MARKET', 'MANGALAMAMANDOOR', 'PUDUPALAYAM', 'NAMBIYUR', 'VANAPURAM', 'VALLAM', 'VADASERY', 'TIRUVANNAMALAI', 'THODUVATTI', 'KILVELUR', 'ANDIMADAM', 'ADAMANGALAM PUDHUR', 'ARIYALUR', 'KAVINDAPADI', 'CHENGAM', 'DUSI', 'CHITTODE', 'PENNAGARAM', 'VEDHARANYAM', 'TRICHENGODE', 'KAVERIPAKKAM', 'IRUMBOOTHIPATTY', 'KARUR', 'MANNACHANALLUR', 'SUNGUVARCHATRAM', 'THATHAIYANGARPETTAI', 'THIRUTHURAIPOONDI', 'VADUVUR', 'KATTUPUTHUR', 'OOTY', 'ALANGULAM', 'TISAYANVILAI', 'UTHUKOTTAI', 'VILATHIKULAM', 'CONNOOR', 'KOVILPATTI', 'TIRUVENKADAM', 'KADAMBUR', 'PUDUR', 'SATHANKULAM', 'ANDIPATTI', 'ETTAYAPURAM', 'THOOTHUKUDI', 'KARAMADAI', 'KALUGUMALAI', 'MYLAMPADI', 'MUTHUR', 'KALIYAKAVILAI']
+
+            };
+
+            // --- NEW: Event listener to update APMC dropdown when state changes ---
+            stateInput.addEventListener('change', (event) => {
+                const selectedState = event.target.value;
+                const apmcs = apmcData[selectedState] || [];
+
+                // Clear current APMC options
+                apmcInput.innerHTML = '';
+
+                if (apmcs.length > 0) {
+                    // Add a default placeholder option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = "";
+                    defaultOption.textContent = "Select APMC";
+                    apmcInput.appendChild(defaultOption);
+
+                    // Populate with new APMC options
+                    apmcs.forEach(apmc => {
+                        const option = document.createElement('option');
+                        option.value = apmc;
+                        option.textContent = apmc;
+                        apmcInput.appendChild(option);
+                    });
+                    apmcInput.disabled = false;
+                } else {
+                    // If no APMCs for the selected state, disable the dropdown
+                    const option = document.createElement('option');
+                    option.textContent = 'No APMCs available';
+                    apmcInput.appendChild(option);
+                    apmcInput.disabled = true;
+                }
+            });
+
+            // --- Forecast Logic ---
+            forecastForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const selectedCommodity = commoditySelect.value;
+
+                // Reset UI
+                forecastLoader.classList.remove('hidden');
+                forecastError.classList.add('hidden');
+                forecastResult.classList.add('hidden');
+
+                try {
+                    const response = await fetch(`http://127.0.0.1:8000/api/predict/${selectedCommodity}`);
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || 'Failed to fetch forecast data.');
+                    }
+                    const data = await response.json();
+                    displayForecastResults(data);
+                    
+                } catch (error) {
+                    displayForecastError(error.message);
+                } finally {
+                    forecastLoader.classList.add('hidden');
+                }
+            });
+
+            function displayForecastResults(data) {
+                // Display Plot
+                forecastPlot.src = `data:image/png;base64,${data.plot_base64}`;
+
+                // Populate Table
+                forecastTableBody.innerHTML = ''; // Clear previous results
+                data.monthly_forecast.forEach(record => {
+
+                    const date = record.date.split('T')[0]; // e.g. "2025-09-16"
+                    // const date = new Date(dateString + "T00:00:00"); 
+                    // const date = new Date(record.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                    const price = parseFloat(record.forecast).toFixed(2);
+                    const row = `<tr>
+                                    <td>${date}</td>
+                                    <td>₹ ${price}</td>
+                                 </tr>`;
+                    forecastTableBody.innerHTML += row;
+                });
+
+                forecastResult.classList.remove('hidden');
+            }
+
+            function displayForecastError(message) {
+                forecastError.textContent = `Error: ${message}`;
+                forecastError.classList.remove('hidden');
+            }
+
+            // --- Price Tracker Logic ---
+            trackerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const payload = {
+                    commodity_name: commodityInput.value,
+                    state_name: stateInput.value,
+                    apmc_name: apmcInput.value
+                };
+
+                // Reset UI
+                trackerLoader.classList.remove('hidden');
+                trackerError.classList.add('hidden');
+                trackerResult.classList.add('hidden');
+
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/api/marketPrice', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || 'Failed to fetch market data.');
+                    }
+                    const data = await response.json();
+                    displayTrackerResults(data);
+                } catch (error) {
+                    displayTrackerError(error.message);
+                } finally {
+                    trackerLoader.classList.add('hidden');
+                }
+            });
+
+            function displayTrackerResults(data) {
+                trackerTableBody.innerHTML = ''; // Clear previous results
+                if (data.length === 0) {
+                    trackerTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">No data found for the last 7 days.</td></tr>`;
+                } else {
+                     data.forEach(record => {
+                        const row = `<tr>
+                                        <td>${record.created_at}</td>
+                                        <td>${record.commodity}</td>
+                                        <td>${record.apmc}</td>
+                                        <td>₹ ${record.min_price}</td>
+                                        <td>₹ ${record.max_price}</td>
+                                        <td>₹ ${record.modal_price}</td>
+                                     </tr>`;
+                        trackerTableBody.innerHTML += row;
+                    });
+                }
+                trackerResult.classList.remove('hidden');
+            }
+
+            function displayTrackerError(message) {
+                trackerError.textContent = `Error: ${message}`;
+                trackerError.classList.remove('hidden');
+            }
+        });
+    </script>
+
+</body>
+</html>
