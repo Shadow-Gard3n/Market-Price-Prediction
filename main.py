@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from routes import prediction
+from routes import price_prediction
+
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -21,3 +23,4 @@ app.add_middleware(
 )
 
 app.include_router(prediction.router)
+app.include_router(price_prediction.router)
