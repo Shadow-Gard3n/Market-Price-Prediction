@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri-Market Intelligence Hub</title>
+    <link rel="stylesheet" href="css/market.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Small overrides for specific chart sizing if needed */
+        .chart-wrapper {
+            position: relative; 
+            height: 400px; 
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>Agri-Market Intelligence Hub</h1>
+            <p class="header-subtitle">Comprehensive Price Forecasting & Real-time Tracking</p>
+        </header>
+
+        <section class="card">
+            <div class="card-header">
+                <h2 class="card-title">Price Prediction</h2>
+                <div class="tabs">
+                    <div class="tab-nav pills">
+                        <button class="tab-trigger active" onclick="switchMode('national')">National Standard Forecast</button>
+                        <button class="tab-trigger" onclick="switchMode('regional')">Regional Market Forecast</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-content">
+                
+                <div id="mode-national" class="prediction-mode">
+                    <div class="alert alert-info">
+                        <div class="alert-icon">i</div>
+                        <div class="alert-content">
+                            <div class="alert-title">National Trends</div>
+                            <div class="alert-description">Uses standard national datasets to predict trends for the next 7 days using Deep Learning.</div>
+                        </div>
+                    </div>
+
+                    <form id="national-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="national-commodity">Select Commodity</label>
+                                <select id="national-commodity" required>
+                                    <option value="" disabled selected>Choose a crop...</option>
+                                    <optgroup label="Grains">
+                                        <option value="Rice">Rice</option>
+                                        <option value="Wheat">Wheat</option>
+                                        <option value="Atta">Atta</option>
+                                    </optgroup>
+                                    <optgroup label="Vegetables">
+                                        <option value="Onion">Onion</option>
+                                        <option value="Potato">Potato</option>
+                                        <option value="Tomato">Tomato</option>
+                                    </optgroup>
+                                    <optgroup label="Pulses">
+                                        <option value="Tur_dal">Tur Dal</option>
+                                        <option value="Urad_dal">Urad Dal</option>
+                                        <option value="Moong_dal">Moong Dal</option>
+                                        <option value="Masoor_dal">Masoor Dal</option>
+                                        <option value="Gram_dal">Gram Dal</option>
+                                    </optgroup>
+                                    <optgroup label="Edible Oils">
+                                        <option value="Mustard_Oil">Mustard Oil</option>
+                                        <option value="Sunflower_Oil">Sunflower Oil</option>
+                                        <option value="Soya_Oil">Soya Oil</option>
+                                        <option value="Palm_Oil">Palm Oil</option>
+                                        <option value="Groundnut_Oil">Groundnut Oil</option>
+                                        <option value="Vanaspati">Vanaspati</option>
+                                    </optgroup>
+                                    <optgroup label="Others">
+                                        <option value="Sugar">Sugar</option>
+                                        <option value="Milk">Milk</option>
+                                        <option value="Tea_Loose">Tea (Loose)</option>
+                                        <option value="Gur">Gur</option>
+                                        <option value="Salt_Pack_Iodised">Salt (Iodised)</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn">Generate Forecast</button>
+                        </div>
+                    </form>
+
+                    <div id="national-loader" class="loader hidden"></div>
+                    <div id="national-error" class="error-message hidden"></div>
+                    
+                    <div id="national-result" class="result-container hidden">
+                        <div class="grid grid-cols-1 gap-6">
+                            <div class="chart-wrapper">
+                                <canvas id="nationalPriceChart"></canvas>
+                            </div>
+                            <div>
+                                <h3>7-Day Forecast Values</h3>
+                                <div class="table-wrapper">
+                                    <table class="table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Predicted Price (₹)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="national-table-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mode-regional" class="prediction-mode hidden">
+                    <div class="alert alert-warning">
+                        <div class="alert-icon">!</div>
+                        <div class="alert-content">
+                            <div class="alert-title">Regional Volatility</div>
+                            <div class="alert-description">Forecasts 6-month trends based on specific regional market data variations.</div>
+                        </div>
+                    </div>
+
+                    <form id="regional-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="regional-commodity">Select Commodity</label>
+                                <select id="regional-commodity">
+                                    <option value="WHEAT">WHEAT</option>
+                                    <option value="TOMATO">TOMATO</option>
+                                    <option value="BRINJAL">BRINJAL</option>
+                                    <option value="MUSTARD">MUSTARD</option>
+                                    <option value="CAULIFLOWER">CAULIFLOWER</option>
+                                    <option value="CUCUMBER">CUCUMBER</option>
+                                    <option value="PUMPKIN">PUMPKIN</option>
+                                    <option value="CABBAGE">CABBAGE</option>
+                                    <option value="BOTTLE GOURD">BOTTLE GOURD</option>
+                                    <option value="ONION">ONION</option>
+                                    <option value="BAJRA">BAJRA</option>
+                                    <option value="GREEN CHILLI">GREEN CHILLI</option>
+                                    <option value="LADY FINGER">LADY FINGER</option>
+                                    <option value="GUAR SEEDS">GUAR SEEDS</option>
+                                    <option value="BITTER GOURD">BITTER GOURD</option>
+                                    <option value="COTTON">COTTON</option>
+                                    <option value="RADDISH">RADDISH</option>
+                                    <option value="CARROT">CARROT</option>
+                                    <option value="BANANA">BANANA</option>
+                                    <option value="MOONG WHOLE (GREEN GRAM)">MOONG WHOLE (GREEN GRAM)</option>
+                                    <option value="LEMON">LEMON</option>
+                                    <option value="CAPSICUM">CAPSICUM</option>
+                                    <option value="PADDY">PADDY</option>
+                                    <option value="GROUND NUT">GROUND NUT</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn">Get 6-Month Forecast</button>
+                        </div>
+                    </form>
+
+                    <div id="regional-loader" class="loader hidden"></div>
+                    <p id="regional-error" class="error-message hidden"></p>
+                    <div id="regional-result" class="result-container hidden">
+                        <h3>Forecast Chart</h3>
+                        <img id="regional-plot" src="" alt="Commodity Price Forecast Plot" style="width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--border-subtle);">
+                        
+                        <h3 class="mt-6">Forecast Data (End of Month)</h3>
+                        <div class="table-wrapper">
+                            <table class="table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Forecasted Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="regional-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="card mt-8">
+            <div class="card-header">
+                <h2 class="card-title">Live Market Price Tracker</h2>
+            </div>
+            <div class="card-content">
+                <form id="tracker-form">
+                     <div class="form-grid grid-cols-3">
+                        <div class="form-group">
+                            <label for="tracker-commodity">Commodity Name</label>
+                            <select id="tracker-commodity" required>
+                                <option value="">Select Commodity</option>
+                                <option value="WHEAT">WHEAT</option>
+                                <option value="TOMATO">TOMATO</option>
+                                <option value="BRINJAL">BRINJAL</option>
+                                <option value="POTATO">POTATO</option>
+                                <option value="MUSTARD">MUSTARD</option>
+                                <option value="CAULIFLOWER">CAULIFLOWER</option>
+                                <option value="CUCUMBER">CUCUMBER</option>
+                                <option value="PUMPKIN">PUMPKIN</option>
+                                <option value="CABBAGE">CABBAGE</option>
+                                <option value="BOTTLE GOURD">BOTTLE GOURD</option>
+                                <option value="MAIZE">MAIZE</option>
+                                <option value="ONION">ONION</option>
+                                <option value="CHANA (BENGAL GRAM)">CHANA (BENGAL GRAM)</option>
+                                <option value="BAJRA">BAJRA</option>
+                                <option value="GREEN CHILLI">GREEN CHILLI</option>
+                                <option value="LADY FINGER">LADY FINGER</option>
+                                <option value="SOYABEANS">SOYABEANS</option>
+                                <option value="GUAR SEEDS">GUAR SEEDS</option>
+                                <option value="BITTER GOURD">BITTER GOURD</option>
+                                <option value="COTTON">COTTON</option>
+                                <option value="RADDISH">RADDISH</option>
+                                <option value="CARROT">CARROT</option>
+                                <option value="PEAS GREEN">PEAS GREEN</option>
+                                <option value="BANANA">BANANA</option>
+                                <option value="MOONG WHOLE (GREEN GRAM)">MOONG WHOLE (GREEN GRAM)</option>
+                                <option value="LEMON">LEMON</option>
+                                <option value="CAPSICUM">CAPSICUM</option>
+                                <option value="URAD (BLACK GRAM)">URAD (BLACK GRAM)</option>
+                                <option value="PADDY">PADDY</option>
+                                <option value="GROUND NUT">GROUND NUT</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="state-input">State Name</label>
+                            <select id="state-input" required>
+                                <option value="">Select State</option>
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="apmc-input">APMC Name</label>
+                            <select id="apmc-input" required disabled>
+                                <option value="" disabled selected>Select a state first</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-right">
+                        <button type="submit" class="btn">Track Prices</button>
+                    </div>
+                </form>
+
+                <div id="tracker-loader" class="loader hidden"></div>
+                <p id="tracker-error" class="error-message hidden"></p>
+                <div id="tracker-result" class="result-container hidden">
+                     <h3>Last 7 Days Market Data</h3>
+                     <div class="table-wrapper">
+                        <table class="table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Commodity</th>
+                                    <th>APMC</th>
+                                    <th>Unit</th>
+                                    <th>Min Price</th>
+                                    <th>Max Price</th>
+                                    <th>Modal Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tracker-table-body"></tbody>
+                        </table>
+                     </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // --- UI Switching Logic ---
+        function switchMode(mode) {
+            const nationalDiv = document.getElementById('mode-national');
+            const regionalDiv = document.getElementById('mode-regional');
+            const tabs = document.querySelectorAll('.tab-trigger');
+
+            if (mode === 'national') {
+                nationalDiv.classList.remove('hidden');
+                regionalDiv.classList.add('hidden');
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                nationalDiv.classList.add('hidden');
+                regionalDiv.classList.remove('hidden');
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // ==========================================
+            // 1. NATIONAL PREDICTION LOGIC (Chart.js)
+            // ==========================================
+            const nationalForm = document.getElementById('national-form');
+            const nationalCommodity = document.getElementById('national-commodity');
+            const nationalLoader = document.getElementById('national-loader');
+            const nationalError = document.getElementById('national-error');
+            const nationalResult = document.getElementById('national-result');
+            const nationalTableBody = document.getElementById('national-table-body');
+            let priceChart = null;
+
+            nationalForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const commodity = nationalCommodity.value;
+                
+                nationalLoader.classList.remove('hidden');
+                nationalResult.classList.add('hidden');
+                nationalError.classList.add('hidden');
+
+                try {
+                    const response = await fetch(`http://127.0.0.1:8000/price/predict?commodity=${encodeURIComponent(commodity)}`);
+                    const data = await response.json();
+
+                    if (!response.ok) throw new Error(data.detail || 'Failed to fetch prediction');
+                    
+                    displayNationalResults(data);
+                } catch (error) {
+                    nationalError.textContent = error.message;
+                    nationalError.classList.remove('hidden');
+                } finally {
+                    nationalLoader.classList.add('hidden');
+                }
+            });
+
+            function displayNationalResults(data) {
+                nationalResult.classList.remove('hidden');
+                
+                // Chart Data Preparation
+                const labels = data.history_actual.map(item => item.date);
+                const actualPrices = data.history_actual.map(item => item.price);
+                const predictedMap = new Map(data.history_predicted.map(i => [i.date, i.price]));
+                const predictedPrices = labels.map(date => predictedMap.get(date) || null);
+
+                // Render Chart
+                const ctx = document.getElementById('nationalPriceChart').getContext('2d');
+                if (priceChart) priceChart.destroy();
+
+                priceChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Actual Price',
+                                data: actualPrices,
+                                borderColor: '#0f172a', // text-primary
+                                backgroundColor: 'rgba(15, 23, 42, 0.05)',
+                                borderWidth: 2,
+                                pointRadius: 0,
+                                fill: true,
+                                tension: 0.2
+                            },
+                            {
+                                label: 'Model Prediction',
+                                data: predictedPrices,
+                                borderColor: '#6366f1', // primary-500
+                                borderDash: [5, 5],
+                                borderWidth: 2,
+                                pointRadius: 0,
+                                tension: 0.2,
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        plugins: {
+                            title: { display: true, text: `Price Trends: ${data.commodity}` }
+                        }
+                    }
+                });
+
+                // Populate Table
+                nationalTableBody.innerHTML = '';
+                data.forecast.forEach(item => {
+                    const row = `<tr>
+                        <td>${item.date}</td>
+                        <td class="text-success font-bold">₹${item.price.toFixed(2)}</td>
+                    </tr>`;
+                    nationalTableBody.innerHTML += row;
+                });
+            }
+
+
+            // ==========================================
+            // 2. REGIONAL PREDICTION LOGIC (Static Plot)
+            // ==========================================
+            const regionalForm = document.getElementById('regional-form');
+            const regionalCommodity = document.getElementById('regional-commodity');
+            const regionalLoader = document.getElementById('regional-loader');
+            const regionalError = document.getElementById('regional-error');
+            const regionalResult = document.getElementById('regional-result');
+            const regionalPlot = document.getElementById('regional-plot');
+            const regionalTableBody = document.getElementById('regional-table-body');
+
+            regionalForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const selectedCommodity = regionalCommodity.value;
+
+                regionalLoader.classList.remove('hidden');
+                regionalError.classList.add('hidden');
+                regionalResult.classList.add('hidden');
+
+                try {
+                    const response = await fetch(`http://127.0.0.1:8000/api/predict/${selectedCommodity}`);
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || 'Failed to fetch forecast data.');
+                    }
+                    const data = await response.json();
+                    displayRegionalResults(data);
+                } catch (error) {
+                    regionalError.textContent = `Error: ${error.message}`;
+                    regionalError.classList.remove('hidden');
+                } finally {
+                    regionalLoader.classList.add('hidden');
+                }
+            });
+
+            function displayRegionalResults(data) {
+                regionalPlot.src = `data:image/png;base64,${data.plot_base64}`;
+                regionalTableBody.innerHTML = '';
+                data.monthly_forecast.forEach(record => {
+                    const date = record.date.split('T')[0];
+                    const price = parseFloat(record.forecast).toFixed(2);
+                    const row = `<tr><td>${date}</td><td>₹ ${price}</td></tr>`;
+                    regionalTableBody.innerHTML += row;
+                });
+                regionalResult.classList.remove('hidden');
+            }
+
+            // ==========================================
+            // 3. TRACKER LOGIC & APMC DATA
+            // ==========================================
+            const stateInput = document.getElementById('state-input');
+            const apmcInput = document.getElementById('apmc-input');
+            let apmcData = {};
+
+            // Fetch APMC JSON
+            fetch('apmc_data.json')
+                .then(res => res.ok ? res.json() : Promise.reject(res.status))
+                .then(data => {
+                    apmcData = data;
+                    populateStateDropdown();
+                })
+                .catch(err => console.error("Error loading APMC data:", err));
+
+            function populateStateDropdown() {
+                stateInput.innerHTML = '<option value="">Select State</option>';
+                Object.keys(apmcData).sort().forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state;
+                    option.textContent = state;
+                    stateInput.appendChild(option);
+                });
+            }
+
+            stateInput.addEventListener('change', (event) => {
+                const selectedState = event.target.value;
+                const apmcs = apmcData[selectedState] || [];
+                apmcInput.innerHTML = '<option value="">Select APMC</option>';
+
+                if (apmcs.length > 0) {
+                    apmcInput.disabled = false;
+                    apmcs.forEach(apmc => {
+                        const option = document.createElement('option');
+                        option.value = apmc;
+                        option.textContent = apmc;
+                        apmcInput.appendChild(option);
+                    });
+                } else {
+                    apmcInput.disabled = true;
+                    apmcInput.innerHTML = '<option>No APMCs available</option>';
+                }
+            });
+
+            // Tracker Form Submit
+            const trackerForm = document.getElementById('tracker-form');
+            const trackerLoader = document.getElementById('tracker-loader');
+            const trackerError = document.getElementById('tracker-error');
+            const trackerResult = document.getElementById('tracker-result');
+            const trackerTableBody = document.getElementById('tracker-table-body');
+
+            trackerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const payload = {
+                    commodity_name: document.getElementById('tracker-commodity').value,
+                    state_name: stateInput.value,
+                    apmc_name: apmcInput.value
+                };
+
+                trackerLoader.classList.remove('hidden');
+                trackerError.classList.add('hidden');
+                trackerResult.classList.add('hidden');
+
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/api/marketPrice', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || 'Failed to fetch market data.');
+                    }
+                    
+                    const data = await response.json();
+                    trackerTableBody.innerHTML = '';
+                    
+                    if (data.length === 0) {
+                        trackerTableBody.innerHTML = `<tr><td colspan="7" class="text-center">No data found for the last 7 days.</td></tr>`;
+                    } else {
+                        data.forEach(record => {
+                            const row = `<tr>
+                                <td>${record.created_at}</td>
+                                <td>${record.commodity}</td>
+                                <td>${record.apmc}</td>
+                                <td>${record.Commodity_Uom}</td>
+                                <td>₹ ${record.min_price}</td>
+                                <td>₹ ${record.max_price}</td>
+                                <td>₹ ${record.modal_price}</td>
+                            </tr>`;
+                            trackerTableBody.innerHTML += row;
+                        });
+                    }
+                    trackerResult.classList.remove('hidden');
+                } catch (error) {
+                    trackerError.textContent = `Error: ${error.message}`;
+                    trackerError.classList.remove('hidden');
+                } finally {
+                    trackerLoader.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
