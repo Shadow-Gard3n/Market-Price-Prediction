@@ -9,3 +9,4 @@ matplotlib
 httpx
 python-dotenv
 tensorflow
+pymongo
