@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Price Prediction</title>
+    <link rel="stylesheet" href="css/price.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Agri-Market Price Predictor</h1>
+            <p>Forecast future prices for better farming decisions</p>
+        </header>
+
+        <main>
+            <div class="control-panel">
+                <div class="input-group">
+                    <label for="commoditySelect">Select Commodity:</label>
+                    <select id="commoditySelect">
+                        <option value="" disabled selected>Choose a crop...</option>
+                        <optgroup label="Grains">
+                            <option value="Rice">Rice</option>
+                            <option value="Wheat">Wheat</option>
+                            <option value="Atta">Atta</option>
+                        </optgroup>
+                        <optgroup label="Vegetables">
+                            <option value="Onion">Onion</option>
+                            <option value="Potato">Potato</option>
+                            <option value="Tomato">Tomato</option>
+                        </optgroup>
+                        <optgroup label="Pulses">
+                            <option value="Tur_dal">Tur Dal</option>
+                            <option value="Urad_dal">Urad Dal</option>
+                            <option value="Moong_dal">Moong Dal</option>
+                            <option value="Masoor_dal">Masoor Dal</option>
+                            <option value="Gram_dal">Gram Dal</option>
+                        </optgroup>
+                        <optgroup label="Edible Oils">
+                            <option value="Mustard_Oil">Mustard Oil</option>
+                            <option value="Sunflower_Oil">Sunflower Oil</option>
+                            <option value="Soya_Oil">Soya Oil</option>
+                            <option value="Palm_Oil">Palm Oil</option>
+                            <option value="Groundnut_Oil">Groundnut Oil</option>
+                            <option value="Vanaspati">Vanaspati</option>
+                        </optgroup>
+                        <optgroup label="Others">
+                            <option value="Sugar">Sugar</option>
+                            <option value="Milk">Milk</option>
+                            <option value="Tea_Loose">Tea (Loose)</option>
+                            <option value="Gur">Gur</option>
+                            <option value="Salt_Pack_Iodised">Salt (Iodised)</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <button id="predictBtn" onclick="fetchPrediction()">Get Forecast</button>
+            </div>
+
+            <div id="loading" class="hidden">
+                <div class="spinner"></div>
+                <p>Analyzing market trends...</p>
+            </div>
+
+            <div id="error-message" class="hidden"></div>
+
+            <div id="result-section" class="hidden">
+                <div class="chart-container">
+                    <canvas id="priceChart"></canvas>
+                </div>
+                <div id="forecast-details">
+                    <h3>7-Day Forecast Values</h3>
+                    <table id="forecastTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Predicted Price (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let priceChart = null;
+
+        async function fetchPrediction() {
+            const commodity = document.getElementById('commoditySelect').value;
+            if (!commodity) {
+                showError("Please select a commodity first.");
+                return;
+            }
+
+            // UI State Management
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('result-section').classList.add('hidden');
+            document.getElementById('error-message').classList.add('hidden');
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/price/predict?commodity=${encodeURIComponent(commodity)}`);                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to fetch prediction');
+                }
+
+                displayResults(data);
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                document.getElementById('loading').classList.add('hidden');
+            }
+        }
+
+        // function displayResults(data) {
+        //     document.getElementById('result-section').classList.remove('hidden');
+            
+        //     const labels = data.forecast.map(item => item.date);
+        //     const prices = data.forecast.map(item => item.price);
+
+        //     // 1. Update Chart
+        //     const ctx = document.getElementById('priceChart').getContext('2d');
+        //     if (priceChart) {
+        //         priceChart.destroy();
+        //     }
+
+        //     priceChart = new Chart(ctx, {
+        //         type: 'line',
+        //         data: {
+        //             labels: labels,
+        //             datasets: [{
+        //                 label: `${data.commodity} Price Forecast (₹)`,
+        //                 data: prices,
+        //                 borderColor: '#2e7d32',
+        //                 backgroundColor: 'rgba(46, 125, 50, 0.1)',
+        //                 borderWidth: 3,
+        //                 pointBackgroundColor: '#fff',
+        //                 pointBorderColor: '#2e7d32',
+        //                 pointRadius: 5,
+        //                 pointHoverRadius: 7,
+        //                 fill: true,
+        //                 tension: 0.4
+        //             }]
+        //         },
+        //         options: {
+        //             responsive: true,
+        //             plugins: {
+        //                 legend: {
+        //                     labels: { font: { size: 14 } }
+        //                 },
+        //                 title: {
+        //                     display: true,
+        //                     text: `Predicted Trend for Next 7 Days`,
+        //                     font: { size: 16 }
+        //                 }
+        //             },
+        //             scales: {
+        //                 y: {
+        //                     beginAtZero: false,
+        //                     title: { display: true, text: 'Price (₹)' }
+        //                 },
+        //                 x: {
+        //                     title: { display: true, text: 'Date' }
+        //                 }
+        //             }
+        //         }
+        //     });
+
+        //     // 2. Update Table
+        //     const tableBody = document.querySelector('#forecastTable tbody');
+        //     tableBody.innerHTML = ''; // Clear old rows
+            
+        //     data.forecast.forEach(item => {
+        //         const row = `<tr>
+        //             <td>${item.date}</td>
+        //             <td>₹${item.price.toFixed(2)}</td>
+        //         </tr>`;
+        //         tableBody.innerHTML += row;
+        //     });
+        // }
+
+
+        function displayResults(data) {
+            document.getElementById('result-section').classList.remove('hidden');
+            
+            // --- 1. PREPARE CHART DATA ---
+            // Extract dates and prices for Actuals
+            const labels = data.history_actual.map(item => item.date);
+            const actualPrices = data.history_actual.map(item => item.price);
+            
+            // Prepare Predicted prices
+            // Note: history_predicted might be slightly shorter if data in 2022 was missing
+            // We map it to align with the labels
+            const predictedMap = new Map(data.history_predicted.map(i => [i.date, i.price]));
+            const predictedPrices = labels.map(date => predictedMap.get(date) || null);
+
+            // --- 2. RENDER CHART ---
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            if (priceChart) {
+                priceChart.destroy();
+            }
+
+            priceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Actual Price (2023-Present)',
+                            data: actualPrices,
+                            borderColor: '#1976D2', // Blue
+                            backgroundColor: 'rgba(25, 118, 210, 0.05)',
+                            borderWidth: 2,
+                            pointRadius: 0, // Clean line
+                            pointHoverRadius: 4,
+                            tension: 0.1,
+                            fill: true
+                        },
+                        {
+                            label: 'Model Prediction (Backtest)',
+                            data: predictedPrices,
+                            borderColor: '#FF7043', // Orange/Red
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            pointHoverRadius: 4,
+                            tension: 0.1,
+                            borderDash: [2, 2] // Dashed line to distinguish
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: {
+                            display: true,
+                            text: `${data.commodity}: Actual vs Predicted Trends`,
+                            font: { size: 16 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ₹${context.parsed.y.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { maxTicksLimit: 10 } },
+                        y: { title: { display: true, text: 'Price (₹)' } }
+                    }
+                }
+            });
+
+            // --- 3. UPDATE TABLE (FUTURE ONLY) ---
+            const tableBody = document.querySelector('#forecastTable tbody');
+            tableBody.innerHTML = ''; 
+            
+            data.forecast.forEach(item => {
+                const row = `<tr>
+                    <td>${item.date}</td>
+                    <td style="color: #2e7d32; font-weight: bold;">₹${item.price.toFixed(2)}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        function showError(msg) {
+            const errDiv = document.getElementById('error-message');
+            errDiv.textContent = msg;
+            errDiv.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
