@@ -9,14 +9,14 @@ A comprehensive Machine Learning application designed to predict the market pric
 <img width="1260" height="700" alt="Screenshot 2025-11-26 at 7 43 08 AM" src="https://github.com/user-attachments/assets/66d6f7a7-79d4-430c-afed-521284fb6421" />
 <img width="1233" height="708" alt="Screenshot 2025-11-26 at 7 43 31 AM" src="https://github.com/user-attachments/assets/b8b724e1-0cfb-4d5c-b246-0b1b3d7b60f4" />
 
+
 ## 🚀 Features
 
-* **Price Prediction:** Predicts the modal price of commodities for upcoming dates using XGBoost.
-* **6-Month Forecast:** Generates a daily and monthly forecast trend for specific crops.
-* **Market Tracker:** Interactive frontend to view current trends and historical data.
-* **Admin Dashboard:** Functionality for managing data and system configurations.
-* **Dynamic Data Mapping:** Automatically maps States to APMCs (Agricultural Produce Market Committees) for easy user selection.
-* **API Support:** Robust REST API built with FastAPI including CORS support for local development.
+* **Market Price Prediction:** Utilizes advanced XGBoost and LSTM models to generate accurate daily and 6-month price trend forecasts for commodities across various market centers.
+* **6-Month Forecast:** Generates a daily and monthly forecast trend for important commodities sold in market.
+* **Market Price Tracker:** Interactive frontend to view current trends and historical data.
+* **Admin Dashboard:** Functionality for managing market price for each center and analysis data.
+* **Smart Buffer Stock Intervention:** An automated decision system that detects price spikes (breaching Upper Control Limits) and recommends the exact timing and tonnage of buffer stock release to stabilize markets pre-emptively.
 
 ## 🛠️ Tech Stack
 
@@ -26,9 +26,9 @@ A comprehensive Machine Learning application designed to predict the market pric
 * **Database:** MongoDB (via `pymongo`)
 
 ### Machine Learning & Data
-* **Core Model:** XGBoost (Regressor)
+* **Core Model:** XGBoost (Regressor), LSTM
 * **Data Manipulation:** Pandas, NumPy
-* **Utilities:** Joblib (Model persistence), Scikit-Learn (Metrics)
+* **Utilities:** Joblib (Model persistence), Scikit-Learn (Metrics), Tensorflow
 * **Visualization:** Matplotlib
 
 ### Frontend
