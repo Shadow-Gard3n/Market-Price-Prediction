@@ -2,6 +2,13 @@
 
 A comprehensive Machine Learning application designed to predict the market prices of various commodities (Vegetables, Grains, Oils, etc.) based on historical data from Mandis. This system uses an XGBoost regression model served via a FastAPI backend and visualizes the data through a web-based frontend.
 
+
+## Images
+<img width="1251" height="766" alt="Screenshot 2025-11-26 at 7 41 45 AM" src="https://github.com/user-attachments/assets/2c417a52-4119-4614-8385-09b930f023c3" />
+<img width="1220" height="782" alt="Screenshot 2025-11-26 at 7 42 23 AM" src="https://github.com/user-attachments/assets/46c39cca-3302-40e0-893b-1ea38a9fe8ea" />
+<img width="1260" height="700" alt="Screenshot 2025-11-26 at 7 43 08 AM" src="https://github.com/user-attachments/assets/66d6f7a7-79d4-430c-afed-521284fb6421" />
+<img width="1233" height="708" alt="Screenshot 2025-11-26 at 7 43 31 AM" src="https://github.com/user-attachments/assets/b8b724e1-0cfb-4d5c-b246-0b1b3d7b60f4" />
+
 ## 🚀 Features
 
 * **Price Prediction:** Predicts the modal price of commodities for upcoming dates using XGBoost.
