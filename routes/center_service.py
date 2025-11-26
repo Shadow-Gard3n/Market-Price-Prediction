@@ -157,7 +157,6 @@ import os
 import joblib
 import pandas as pd
 import numpy as np
-import glob
 from datetime import datetime
 from fastapi import APIRouter
 from tensorflow.keras.models import load_model
@@ -165,10 +164,9 @@ from services.database import price_collection
 
 router = APIRouter()
 
-MODELS_ROOT = 'models'
-DATASET_ROOT = 'Center_Price_Dataset'
+MODELS_ROOT = 'Center_Price_Models'
 PREDICTION_DAYS = 30
-
+# (Keep COMMODITY_MAP here as well)
 COMMODITY_MAP = {
     "Groundnut_oil": "Groundnut", "Mustard_oil": "Mustard", "Vanaspati_oil": "Vanaspati",
     "Soya_oil": "Soya", "Palm_oil": "Palm", "Sunflower_oil": "Sunflower",
@@ -178,16 +176,6 @@ COMMODITY_MAP = {
     "Wheat": "Wheat", "Onion": "Onion", "Potato": "Potato", "Tomato": "Tomato"
 }
 
-def get_last_training_data(commodity_folder):
-    search_pattern = f"{DATASET_ROOT}/*{commodity_folder.lower()}*.csv"
-    files = glob.glob(search_pattern)
-    if not files: return None, None
-    df = pd.read_csv(files[0])
-    df.columns = [c.lower().strip() for c in df.columns]
-    df['date'] = pd.to_datetime(df['date'])
-    df = df.sort_values('date')
-    return df['date'].iloc[-1], df
-
 @router.get("/api/center/predict")
 async def predict_center_price(center: str, commodity: str, target_date: str):
     folder_name = COMMODITY_MAP.get(commodity, commodity.capitalize())
@@ -195,29 +183,38 @@ async def predict_center_price(center: str, commodity: str, target_date: str):
     scaler_path = os.path.join(MODELS_ROOT, folder_name, center, 'scaler.pkl')
 
     if not os.path.exists(model_path):
-        return {"status": "warning", "message": "No model found for this Center/Commodity."}
+        return {"status": "warning", "message": "Model not trained for this location."}
 
     try:
+        # Fetch latest data from MongoDB
+        cursor = price_collection.find(
+            {"location": center, "commodity": commodity},
+            {"_id": 0, "price": 1, "date": 1}
+        ).sort("date", -1).limit(PREDICTION_DAYS)
+        
+        data = list(cursor)
+        
+        if len(data) < PREDICTION_DAYS:
+            return {"status": "warning", "message": f"Need {PREDICTION_DAYS} days of data in DB to predict. Found {len(data)}."}
+        
+        # Sort ascending for model
+        data.reverse()
+        last_date_str = data[-1]['date']
+        last_date = pd.to_datetime(last_date_str)
+        
+        prices = np.array([d['price'] for d in data]).reshape(-1, 1)
+
+        # Load Model
         model = load_model(model_path)
         scaler = joblib.load(scaler_path)
-        last_date, df = get_last_training_data(folder_name)
         
-        if df is None:
-            return {"status": "warning", "message": "Historical dataset missing."}
-
-        df_center = df[df['centre_name'] == center].sort_values('date')
-        
-        if len(df_center) < PREDICTION_DAYS:
-            return {"status": "warning", "message": "Not enough data to predict."}
-
-        last_sequence = df_center['price'].values[-PREDICTION_DAYS:].reshape(-1, 1)
-        current_batch = scaler.transform(last_sequence).reshape(1, PREDICTION_DAYS, 1)
+        current_batch = scaler.transform(prices).reshape(1, PREDICTION_DAYS, 1)
 
         target_dt = pd.to_datetime(target_date)
         days_gap = (target_dt - last_date).days
 
         if days_gap < 1:
-             return {"status": "warning", "message": "Cannot predict for past dates. Select a future date."}
+             return {"status": "warning", "message": "Target date must be after the last available data date."}
 
         forecast_results = []
         total_iterations = days_gap + 6 
@@ -244,10 +241,41 @@ async def predict_center_price(center: str, commodity: str, target_date: str):
 async def get_center_history(center: str, commodity: str):
     if price_collection is None: return {"status": "error", "data": []}
     
-    # Fetch last 7 by date descending
     cursor = price_collection.find(
         {"location": center, "commodity": commodity},
         {"_id": 0, "date": 1, "price": 1}
     ).sort("date", -1).limit(7)
     
     return {"status": "success", "data": list(cursor)}
+
+
+@router.get("/api/debug/check-data")
+def check_data_availability(location: str, commodity: str):
+    """
+    DEBUG TOOL: See why the DB isn't returning data.
+    """
+    if price_collection is None:
+        return {"error": "DB not connected"}
+
+    # 1. Check strict match
+    strict_count = price_collection.count_documents({
+        "location": location,
+        "commodity": commodity
+    })
+    
+    # 2. Check match with 'centre_name' (Common CSV upload error)
+    legacy_count = price_collection.count_documents({
+        "centre_name": location, 
+        "commodity": commodity
+    })
+    
+    # 3. Check sample data to see field names
+    sample = price_collection.find_one({"commodity": commodity})
+    
+    return {
+        "query_params": {"location": location, "commodity": commodity},
+        "strict_match_count": strict_count,
+        "legacy_field_count_centre_name": legacy_count,
+        "sample_document_keys": list(sample.keys()) if sample else "No documents found for this commodity",
+        "sample_date_type": str(type(sample['date'])) if sample else "N/A"
+    }
