@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -36,39 +36,45 @@
 
                         <div class="form-group mb-4">
                             <label for="commodity">Commodity</label>
-                            <select id="commodity" required>
+                            
+                                <select id="commodity" required>
                                     <option value="" disabled selected>Choose a crop...</option>
+                                    
                                     <optgroup label="Grains">
+                                        <option value="Atta">Atta</option>
                                         <option value="Rice">Rice</option>
                                         <option value="Wheat">Wheat</option>
-                                        <option value="Atta">Atta</option>
                                     </optgroup>
+                                    
                                     <optgroup label="Vegetables">
                                         <option value="Onion">Onion</option>
                                         <option value="Potato">Potato</option>
                                         <option value="Tomato">Tomato</option>
                                     </optgroup>
+                                    
                                     <optgroup label="Pulses">
-                                        <option value="Tur_dal">Tur Dal</option>
-                                        <option value="Urad_dal">Urad Dal</option>
-                                        <option value="Moong_dal">Moong Dal</option>
-                                        <option value="Masoor_dal">Masoor Dal</option>
-                                        <option value="Gram_dal">Gram Dal</option>
+                                        <option value="Gram">Gram</option>
+                                        <option value="Masoor">Masoor</option>
+                                        <option value="Moong">Moong</option>
+                                        <option value="Toor">Toor</option>
+                                        <option value="Urad">Urad</option>
                                     </optgroup>
+                                    
                                     <optgroup label="Edible Oils">
-                                        <option value="Mustard_Oil">Mustard Oil</option>
-                                        <option value="Sunflower_Oil">Sunflower Oil</option>
-                                        <option value="Soya_Oil">Soya Oil</option>
-                                        <option value="Palm_Oil">Palm Oil</option>
-                                        <option value="Groundnut_Oil">Groundnut Oil</option>
-                                        <option value="Vanaspati">Vanaspati</option>
+                                        <option value="Groundnut_oil">Groundnut Oil</option>
+                                        <option value="Mustard_oil">Mustard Oil</option>
+                                        <option value="Palm_oil">Palm Oil</option>
+                                        <option value="Soya_oil">Soya Oil</option>
+                                        <option value="Sunflower_oil">Sunflower Oil</option>
+                                        <option value="Vanaspati_oil">Vanaspati Oil</option>
                                     </optgroup>
+                                    
                                     <optgroup label="Others">
-                                        <option value="Sugar">Sugar</option>
-                                        <option value="Milk">Milk</option>
-                                        <option value="Tea_Loose">Tea (Loose)</option>
                                         <option value="Gur">Gur</option>
-                                        <option value="Salt_Pack_Iodised">Salt (Iodised)</option>
+                                        <option value="Milk">Milk</option>
+                                        <option value="Salt">Salt</option>
+                                        <option value="Sugar">Sugar</option>
+                                        <option value="Tea_loose">Tea (Loose)</option>
                                     </optgroup>
                                 </select>
                         </div>
@@ -252,6 +258,243 @@
                 console.error("Chart error", err);
             }
         }
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Price Entry & Buffer Control</title>
+    <link rel="stylesheet" href="css/market.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .info-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+        .history-table-container { max-height: 200px; overflow-y: auto; margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 8px; }
+        .status-warning { color: #d97706; background: #fffbeb; padding: 10px; border-radius: 4px; text-align: center;}
+        .status-error { color: #dc2626; background: #fef2f2; padding: 10px; border-radius: 4px; text-align: center;}
+        
+        /* List Styling */
+        .data-list { list-style: none; padding: 0; margin: 0; }
+        .data-item { display: flex; justify-content: space-between; padding: 8px 10px; border-bottom: 1px dashed #e2e8f0; font-size: 0.9rem; }
+        .data-item:last-child { border-bottom: none; }
+        .data-item span.date { color: #64748b; }
+        .data-item span.val { font-weight: 600; color: #0f172a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <header>
+            <h1>Admin Control Panel</h1>
+            <p class="header-subtitle">Record Prices & Manage Buffer Stocks</p>
+            <div class="header-nav" style="margin-top: 20px;">
+                <a href="market.html" class="btn btn-outline">&larr; Back to Dashboard</a>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <section class="card">
+                <div class="card-header"><h2 class="card-title">Price Entry</h2></div>
+                <div class="card-content">
+                    <form id="entry-form">
+                        <div class="form-group mb-4">
+                            <label for="location">Centre</label>
+                            <select id="location" required><option value="" disabled selected>Select Centre...</option></select>
+                            <input type="hidden" id="centre_id_input">
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="commodity">Commodity</label>
+                            <select id="commodity" required>
+                                <option value="" disabled selected>Choose a crop...</option>
+                                <optgroup label="Grains"><option value="Atta">Atta</option><option value="Rice">Rice</option><option value="Wheat">Wheat</option></optgroup>
+                                <optgroup label="Vegetables"><option value="Onion">Onion</option><option value="Potato">Potato</option><option value="Tomato">Tomato</option></optgroup>
+                                <optgroup label="Pulses"><option value="Gram">Gram</option><option value="Masoor">Masoor</option><option value="Moong">Moong</option><option value="Toor">Toor</option><option value="Urad">Urad</option></optgroup>
+                                <optgroup label="Edible Oils"><option value="Groundnut_oil">Groundnut Oil</option><option value="Mustard_oil">Mustard Oil</option><option value="Palm_oil">Palm Oil</option><option value="Soya_oil">Soya Oil</option><option value="Sunflower_oil">Sunflower Oil</option><option value="Vanaspati_oil">Vanaspati Oil</option></optgroup>
+                                <optgroup label="Others"><option value="Gur">Gur</option><option value="Milk">Milk</option><option value="Salt">Salt</option><option value="Sugar">Sugar</option><option value="Tea_loose">Tea (Loose)</option></optgroup>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="date">Date</label>
+                            <input type="date" id="date" required>
+                        </div>
+
+                        <div class="form-group mb-6">
+                            <label for="price">Today's Price (₹ / kg)</label>
+                            <input type="number" id="price" step="0.01" placeholder="e.g. 45.50" required>
+                        </div>
+
+                        <button type="submit" class="btn w-full">Save & Analyze</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-header"><h2 class="card-title">Market Analysis</h2></div>
+                <div class="card-content">
+                    
+                    <div id="alert-box" class="alert hidden">
+                        <div class="alert-icon">!</div>
+                        <div class="alert-content">
+                            <div class="alert-title" id="alert-title">Status</div>
+                            <div class="alert-description" id="alert-msg">Waiting for input...</div>
+                            <div class="mt-2 font-bold" id="alert-action" style="font-size: 1.1rem;"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <h4 class="text-sm font-semibold mb-2 text-secondary">Previous 7 Days (Actual)</h4>
+                            <div class="history-table-container" style="height: 150px;">
+                                <ul id="history-list" class="data-list">
+                                    <li class="data-item text-center text-secondary">No data loaded</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-sm font-semibold mb-2 text-secondary">Next 7 Days (Predicted)</h4>
+                            <div class="history-table-container" style="height: 150px;">
+                                <ul id="forecast-list" class="data-list">
+                                    <li class="data-item text-center text-secondary">Waiting for analysis...</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-wrapper mt-4" style="height: 200px;">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const centreData = [
+            {"centre_id":"472","centre_name":"Alipurduar"}, {"centre_id":"393","centre_name":"Angul"}, {"centre_id":"11","centre_name":"Araria"}, {"centre_id":"198","centre_name":"Arwal"}, {"centre_id":"473","centre_name":"Asansol"}, {"centre_id":"290","centre_name":"Aurangabad"}, {"centre_id":"14","centre_name":"Balangir"}, {"centre_id":"15","centre_name":"Balasore"}, {"centre_id":"474","centre_name":"Balurghat"}, {"centre_id":"197","centre_name":"Banka"}, {"centre_id":"475","centre_name":"Bankura"}, {"centre_id":"476","centre_name":"Barasat"}, {"centre_id":"477","centre_name":"Bardhaman"}, {"centre_id":"18","centre_name":"Baripada"}, {"centre_id":"478","centre_name":"Baruipur"}, {"centre_id":"200","centre_name":"Begusarai"}, {"centre_id":"479","centre_name":"Berhampore"}, {"centre_id":"24","centre_name":"Berhampur"}, {"centre_id":"407","centre_name":"Bhadrak"}, {"centre_id":"25","centre_name":"Bhagalpur"}, {"centre_id":"201","centre_name":"Bhojpur Ara"}, {"centre_id":"28","centre_name":"Bhubaneshwar"}, {"centre_id":"34","centre_name":"Bokaro"}, {"centre_id":"394","centre_name":"Boudhgarh"}, {"centre_id":"202","centre_name":"Buxar"}, {"centre_id":"480","centre_name":"Chinsurah"}, {"centre_id":"481","centre_name":"Cooch Behar"}, {"centre_id":"40","centre_name":"Cuttack"}, {"centre_id":"293","centre_name":"Daltonganj"}, {"centre_id":"42","centre_name":"Darbhanga"}, {"centre_id":"199","centre_name":"Daudnagar Aurangabad"}, {"centre_id":"294","centre_name":"Deoghar"}, {"centre_id":"45","centre_name":"Dhanbad"}, {"centre_id":"395","centre_name":"Dhenkanal"}, {"centre_id":"56","centre_name":"Gaya"}, {"centre_id":"57","centre_name":"Giridhi"}, {"centre_id":"494","centre_name":"Godda"}, {"centre_id":"203","centre_name":"Gopalganj"}, {"centre_id":"60","centre_name":"Gumla"}, {"centre_id":"482","centre_name":"Howrah"}, {"centre_id":"396","centre_name":"Jagatsinghpur"}, {"centre_id":"518","centre_name":"Jajpur"}, {"centre_id":"483","centre_name":"Jalapiguri"}, {"centre_id":"78","centre_name":"Jamshedpur (East Singbhum)"}, {"centre_id":"391","centre_name":"Jamtara"}, {"centre_id":"204","centre_name":"Jamui"}, {"centre_id":"205","centre_name":"Jehanabad"}, {"centre_id":"79","centre_name":"Jeypore"}, {"centre_id":"484","centre_name":"Jhargram"}, {"centre_id":"408","centre_name":"Jharsuguda"}, {"centre_id":"206","centre_name":"Kaimur"}, {"centre_id":"519","centre_name":"Kalahandi"}, {"centre_id":"485","centre_name":"Kalimpong"}, {"centre_id":"397","centre_name":"Kandhamal"}, {"centre_id":"89","centre_name":"Katihar"}, {"centre_id":"496","centre_name":"Kendrapara"}, {"centre_id":"398","centre_name":"Keonjhar"}, {"centre_id":"90","centre_name":"Khagaria"}, {"centre_id":"91","centre_name":"Kharagpur"}, {"centre_id":"207","centre_name":"Kishanganj"}, {"centre_id":"495","centre_name":"Koderma"}, {"centre_id":"93","centre_name":"Kolkata"}, {"centre_id":"486","centre_name":"Krishnagar"}, {"centre_id":"208","centre_name":"Lakhisarai"}, {"centre_id":"392","centre_name":"Latehar"}, {"centre_id":"99","centre_name":"Lohardaga"}, {"centre_id":"102","centre_name":"Madhubani"}, {"centre_id":"105","centre_name":"Malda"}, {"centre_id":"399","centre_name":"Malkangiri"}, {"centre_id":"234","centre_name":"Medhepura"}, {"centre_id":"114","centre_name":"Motihari"}, {"centre_id":"116","centre_name":"Munger"}, {"centre_id":"117","centre_name":"Muzzafarpur"}, {"centre_id":"400","centre_name":"Nabarangpur"}, {"centre_id":"235","centre_name":"Nalanda"}, {"centre_id":"121","centre_name":"Nawada"}, {"centre_id":"401","centre_name":"Nayagarh"}, {"centre_id":"402","centre_name":"Nuapada"}, {"centre_id":"296","centre_name":"Pakur"}, {"centre_id":"403","centre_name":"Paralakhemundi Gajapati"}, {"centre_id":"126","centre_name":"Patna"}, {"centre_id":"404","centre_name":"Puri"}, {"centre_id":"131","centre_name":"Purnia"}, {"centre_id":"132","centre_name":"Purulia"}, {"centre_id":"133","centre_name":"Raiganj"}, {"centre_id":"295","centre_name":"Ramgarh"}, {"centre_id":"137","centre_name":"Rampurhat"}, {"centre_id":"138","centre_name":"Ranchi"}, {"centre_id":"405","centre_name":"Rayagada"}, {"centre_id":"140","centre_name":"Rohtas (Sasaram)"}, {"centre_id":"141","centre_name":"Rourkela"}, {"centre_id":"145","centre_name":"Saharsa"}, {"centre_id":"146","centre_name":"Sahibganj"}, {"centre_id":"147","centre_name":"Samastipur"}, {"centre_id":"148","centre_name":"Sambalpur"}, {"centre_id":"149","centre_name":"Saran"}, {"centre_id":"291","centre_name":"Seraikella"}, {"centre_id":"236","centre_name":"Sheikhpura"}, {"centre_id":"237","centre_name":"Sheohar"}, {"centre_id":"155","centre_name":"Siliguri"}, {"centre_id":"156","centre_name":"Simdega"}, {"centre_id":"238","centre_name":"Sitamarhi"}, {"centre_id":"239","centre_name":"Siwan"}, {"centre_id":"406","centre_name":"Sonepur"}, {"centre_id":"240","centre_name":"Supaul"}, {"centre_id":"487","centre_name":"Tamluk"}, {"centre_id":"241","centre_name":"Vaishali"}, {"centre_id":"242","centre_name":"West Champaran"}, {"centre_id":"292","centre_name":"West Singhbhum"}
+        ];
+
+        const locationSelect = document.getElementById('location');
+        centreData.sort((a, b) => a.centre_name.localeCompare(b.centre_name));
+        centreData.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.centre_name; opt.textContent = c.centre_name; opt.dataset.id = c.centre_id;
+            locationSelect.appendChild(opt);
+        });
+
+        document.getElementById('date').valueAsDate = new Date();
+        let trendChart = null;
+
+        // --- SUBMIT HANDLER ---
+        document.getElementById('entry-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const selOption = locationSelect.options[locationSelect.selectedIndex];
+            const payload = {
+                location: selOption.value,
+                centre_id: selOption.dataset.id,
+                commodity: document.getElementById('commodity').value,
+                date: document.getElementById('date').value,
+                price: parseFloat(document.getElementById('price').value)
+            };
+
+            try {
+                // 1. POST Data & Get Analysis
+                const response = await fetch('http://127.0.0.1:8000/api/add-price', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) throw new Error("Server Error");
+                const result = await response.json();
+
+                // 2. Update UI
+                const alertBox = document.getElementById('alert-box');
+                alertBox.classList.remove('hidden');
+                alertBox.className = result.is_inflation ? 'alert alert-error' : 'alert alert-success';
+                document.getElementById('alert-title').innerText = result.is_inflation ? "⚠️ MARKET ALARM" : "✅ STABLE";
+                document.getElementById('alert-msg').innerText = result.message;
+                document.getElementById('alert-action').innerText = result.action;
+
+                // 3. Update Forecast List
+                const forecastList = document.getElementById('forecast-list');
+                forecastList.innerHTML = '';
+                if (result.forecast && result.forecast.length > 0) {
+                    result.forecast.forEach(item => {
+                        forecastList.innerHTML += `<li class="data-item"><span class="date">${item.date}</span><span class="val">₹${item.price}</span></li>`;
+                    });
+                } else {
+                    forecastList.innerHTML = '<li class="data-item">No forecast available.</li>';
+                }
+
+                // 4. Fetch History & Update Chart
+                await fetchHistoryAndChart(payload.location, payload.commodity);
+
+            } catch (error) {
+                console.error(error);
+                alert("Error saving data. Check backend.");
+            }
+        });
+
+        async function fetchHistoryAndChart(location, commodity) {
+            try {
+                const res = await fetch(`http://127.0.0.1:8000/api/admin/history/${location}/${commodity}`);
+                const data = await res.json();
+                
+                // Update History List
+                const histList = document.getElementById('history-list');
+                histList.innerHTML = '';
+                if (data.length > 0) {
+                    // Sort desc for list
+                    const descData = [...data].sort((a,b) => new Date(b.date) - new Date(a.date));
+                    descData.forEach(item => {
+                        histList.innerHTML += `<li class="data-item"><span class="date">${item.date}</span><span class="val">₹${item.price}</span></li>`;
+                    });
+                } else {
+                    histList.innerHTML = '<li class="data-item">No history found.</li>';
+                }
+
+                // Render Chart (Ascending Order)
+                const ctx = document.getElementById('trendChart').getContext('2d');
+                if (trendChart instanceof Chart) trendChart.destroy();
+
+                const sortedData = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
+                
+                trendChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: sortedData.map(d => d.date),
+                        datasets: [{
+                            label: 'Historical Price',
+                            data: sortedData.map(d => d.price),
+                            borderColor: '#2563eb',
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            fill: true,
+                            tension: 0.2
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+
+            } catch (err) {
+                console.error("History fetch error", err);
+            }
+        }
+        
+        // Initial load
+        locationSelect.addEventListener('change', () => {
+            const loc = locationSelect.value;
+            const com = document.getElementById('commodity').value;
+            if(loc && com) fetchHistoryAndChart(loc, com);
+        });
     </script>
 </body>
 </html>
